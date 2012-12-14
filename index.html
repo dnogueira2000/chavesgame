@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Chaves Game</title>
+		<script type="text/javascript">
+			var canvas, ctx;
+			var posXPersonagem = 250;
+			var posYPersonagem = 450;
+			var posXLixo1 = Math.random()*500+1;
+			var posYLixo1 = -20;
+			var posXLixo2 = Math.random()*400+1;
+			var posYLixo2 = -20;
+			var pontos = 0;
+			var nivel = 0;
+			var vl = 3; //velocidade
+			var desconta = -5;
+
+			// Armazena personagem
+			var personagem = new Image();
+			personagem.onload = function() {
+			};
+			personagem.src = 'chaves.png';
+
+			// Armazena cenário
+			var cenario = new Image();
+			cenario.onload = function() {
+			};
+			//cenario.src = 'cenarioesc.png';
+			cenario.src = 'cenario.png';
+
+			// Armazena lixo 1
+			var lixo1 = new Image();
+			lixo1.onload = function() {
+			};
+			lixo1.src = 'sanduiche.png';
+
+			var lixo2 = new Image();
+			lixo2.onload = function() {
+			};
+			lixo2.src = 'sanduiche.png';
+			
+			// Inicia jogo
+			function iniciaCanvasGame() {
+				// Canvas
+				
+				canvas = document.getElementById("gameBoard");
+				if (canvas.getContext) {
+					alert("Bem vindo ao Jogo!");
+					ctx = canvas.getContext("2d");
+					
+					// Loop
+					gameLoop = setInterval(desenhaImagensCanvas, 16);
+					
+					// Associa evento com função para controlar teclado
+					window.addEventListener('keydown', controlaTeclado, true);
+				} else {
+					alert("Seu navegador não suporta HTML5");
+				}
+			}
+
+			// Desenha imagens no jogo
+			function desenhaImagensCanvas() {
+				ctx.clearRect(0,0,800,600);
+				// Cenario
+				ctx.drawImage(cenario,0,0);
+				
+				// Personagem
+				ctx.drawImage(personagem,posXPersonagem,posYPersonagem);
+				
+				// Lixo
+				ctx.drawImage(lixo1,posXLixo1,posYLixo1);
+				ctx.drawImage(lixo2,posXLixo2,posYLixo2);
+				
+				// Movimenta lixo
+				posYLixo1 += vl;
+				posYLixo2 += vl;
+				
+				// Lixo ultrapassou o cenário?
+				if (posYLixo1>520) {
+					// Lixo volta aleatório
+					posXLixo1 = Math.random()*500+1;
+					posYLixo1 = -20;
+
+					// Perde pontos
+					pontos-= - desconta;
+				}
+				if (posYLixo2>520) {
+					// Lixo volta aleatório
+					posXLixo2 = Math.random()*400+1;
+					posYLixo2 = -20;
+
+					// Perde pontos
+					pontos-= - desconta;
+				}
+				
+				// Mostra distância entre personagem e lixo
+				//ctx.fillText("Distância: " + distancia(posXPersonagem,posYPersonagem,posXLixo1,posYLixo1),100,150);
+				//ctx.fillText("Distância2: " + distancia(posXPersonagem,posYPersonagem,posXLixo2,posYLixo2),100,190);
+
+				// Colidiu?
+				if ((distancia(posXPersonagem,posYPersonagem,posXLixo1,posYLixo1) < 100)){
+					// Atualiza pontos
+					pontos+=20;
+
+					// Posição do novo lixo
+					posXLixo1 = Math.random()*500+1;
+					posYLixo1 = -20;	
+				}
+				if ((distancia(posXPersonagem,posYPersonagem,posXLixo2,posYLixo2) < 100)){
+					// Atualiza pontos
+					pontos+=20;
+
+					// Posição do novo lixo 2
+					posXLixo2 = Math.random()*400+1;
+					posYLixo2 = -20;
+				}
+				
+				// Atualiza pontos
+				atualizaPontos();
+			}
+			
+			// Controla teclado
+			function controlaTeclado(evt) {
+				// Verifica tecla pressionada
+				switch (evt.keyCode) {
+					// Para Esquerda
+					case 37:
+						posXPersonagem = posXPersonagem - 20;
+						if (posXPersonagem < 0) posXPersonagem = 0;
+					break;
+
+					// Para direita
+					case 39:
+						posXPersonagem = posXPersonagem + 20;
+						if (posXPersonagem > 450) posXPersonagem = 450;
+					break;
+				}
+			}
+			
+			// Atualizar placar
+			function atualizaPontos() {
+				ctx.font = "40pt Calibri";
+				ctx.fillStyle = "black";
+				ctx.fillText("Pontos: "+ pontos,100,100);
+				if(pontos < -50){
+					alert("Game over");
+					window.open(window.location, "_self");
+				}
+				else if(pontos > 100 && pontos <= 120 && nivel == 0){
+					a = confirm("Nível 1 completo");
+					nivel = 1;
+					if(a) {
+						alert("Bem vindo ao nível 2");
+						cenario.src = 'cenario2.png';
+						vl += 3;
+						desconta += -5;
+					}else {
+						alert("Até mais pessoal até a próxima vez!");
+						window.open(window.location, "_self");
+					}
+				}else if(pontos > 300 && pontos <= 320 && nivel == 1) {
+					a = confirm("Nível 2 completo");
+					nivel = 2;
+					if(a) {
+						alert("Bem vindo ao nível 3");
+						cenario.src = 'cenario3.png';
+						vl += 3; 
+						desconta += -5; 
+					}else {
+						alert("Até mais pessoal até a próxima vez!");
+						window.open(window.location, "_self");
+					}
+				}else if(pontos > 600 && pontos <= 620 && nivel == 2) {
+					a = confirm("Nível 3 completo");
+					nivel = 3;
+					if(a) {
+						alert("Bem vindo ao último nível");
+						cenario.src = 'cenario4.png';
+						vl += 3; 
+						desconta += -5; 
+					}else {
+						alert("Até mais pessoal até a próxima vez!");
+						window.open(window.location, "_self");
+					}
+				}else if(pontos > 1000) {
+					alert("Parabéns, você venceu!!!Isso isso isso");
+					window.open(window.location, "_self");
+				}
+			}
+	
+			// Calcula distância
+			function distancia(x1c,y1c,x2c,y2c) {
+				x1c = x1c + personagem.width/2;
+				y1c = y1c + personagem.height/2;
+				x2c = x2c + lixo1.width/2;
+				y2c = y2c + lixo1.height/2;
+				
+				// Eleva ao quadrado
+				x = Math.pow(x1c - x2c,2);
+				y = Math.pow(y1c - y2c,2);
+				d = Math.sqrt(x+y);
+
+				// Raiz (teorema de Pitágoras)
+				return Math.round(d);
+			}
+			
+			function parar() {
+				a = confirm("Deseja sair do jogo?");
+				if(a) {
+					window.open(window.location, "_self");
+				}
+			}
+		</script>
+	</head>
+	<body onload="iniciaCanvasGame()" bgcolor="#4160f2">
+		
+		<div align="center">
+			<h1><font face="Verdana" color="#FFF">CHAVES GAME</font></h1>
+			<canvas id="gameBoard" width="600" height="600">
+				
+			</canvas>
+			<input type="submit" value="Parar" name="B1" onclick="parar()" style="font-size: 10 pt; font-family: Verdana"> 
+		</div>
+	</body>
+</html>
