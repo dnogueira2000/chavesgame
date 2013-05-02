@@ -7,10 +7,10 @@
 			var canvas, ctx;
 			var posXPersonagem = 250;
 			var posYPersonagem = 450;
-			var posXLixo1 = Math.random()*500+1;
-			var posYLixo1 = -20;
-			var posXLixo2 = Math.random()*400+1;
-			var posYLixo2 = -20;
+			var posSanduiche1 = Math.random()*500+1;
+			var posYSanduiche1 = -20;
+			var posSanduiche2 = Math.random()*400+1;
+			var posYSanduiche2 = -20;
 			var pontos = 0;
 			var nivel = 0;
 			var vl = 3; //velocidade
@@ -29,16 +29,16 @@
 			//cenario.src = 'cenarioesc.png';
 			cenario.src = 'cenario.png';
 
-			// Armazena lixo 1
-			var lixo1 = new Image();
-			lixo1.onload = function() {
+			// Armazena sanduiche 1
+			var sanduiche1 = new Image();
+			sanduiche.onload = function() {
 			};
-			lixo1.src = 'sanduiche.png';
+			sanduiche1.src = 'sanduiche.png';
 
-			var lixo2 = new Image();
-			lixo2.onload = function() {
+			var sanduiche2 = new Image();
+			sanduiche2.onload = function() {
 			};
-			lixo2.src = 'sanduiche.png';
+			sanduiche2.src = 'sanduiche.png';
 			
 			// Inicia jogo
 			function iniciaCanvasGame() {
@@ -68,52 +68,52 @@
 				// Personagem
 				ctx.drawImage(personagem,posXPersonagem,posYPersonagem);
 				
-				// Lixo
-				ctx.drawImage(lixo1,posXLixo1,posYLixo1);
-				ctx.drawImage(lixo2,posXLixo2,posYLixo2);
+				// sanduiche
+				ctx.drawImage(sanduiche1,posSanduiche1,posYSanduiche1);
+				ctx.drawImage(sanduiche2,posSanduiche2,posYSanduiche2);
 				
-				// Movimenta lixo
-				posYLixo1 += vl;
-				posYLixo2 += vl;
+				// Movimenta sanduiche
+				posYSanduiche1 += vl;
+				posYSanduiche2 += vl;
 				
-				// Lixo ultrapassou o cenário?
-				if (posYLixo1>520) {
-					// Lixo volta aleatório
-					posXLixo1 = Math.random()*500+1;
-					posYLixo1 = -20;
+				// sanduiche ultrapassou o cenário?
+				if (posYSanduiche1>520) {
+					// sanduiche volta aleatório
+					posSanduiche1 = Math.random()*500+1;
+					posYSanduiche1 = -20;
 
 					// Perde pontos
 					pontos-= - desconta;
 				}
-				if (posYLixo2>520) {
-					// Lixo volta aleatório
-					posXLixo2 = Math.random()*400+1;
-					posYLixo2 = -20;
+				if (posYSanduiche2>520) {
+					// sanduiche volta aleatório
+					posSanduiche2 = Math.random()*400+1;
+					posYSanduiche2 = -20;
 
 					// Perde pontos
 					pontos-= - desconta;
 				}
 				
-				// Mostra distância entre personagem e lixo
-				//ctx.fillText("Distância: " + distancia(posXPersonagem,posYPersonagem,posXLixo1,posYLixo1),100,150);
-				//ctx.fillText("Distância2: " + distancia(posXPersonagem,posYPersonagem,posXLixo2,posYLixo2),100,190);
+				// Mostra distância entre personagem e sanduiche
+				//ctx.fillText("Distância: " + distancia(posXPersonagem,posYPersonagem,posSanduiche1,posYSanduiche1),100,150);
+				//ctx.fillText("Distância2: " + distancia(posXPersonagem,posYPersonagem,posSanduiche2,posYSanduiche2),100,190);
 
 				// Colidiu?
-				if ((distancia(posXPersonagem,posYPersonagem,posXLixo1,posYLixo1) < 100)){
+				if ((distancia(posXPersonagem,posYPersonagem,posSanduiche1,posYSanduiche1) < 100)){
 					// Atualiza pontos
 					pontos+=20;
 
-					// Posição do novo lixo
-					posXLixo1 = Math.random()*500+1;
-					posYLixo1 = -20;	
+					// Posição do novo sanduiche
+					posSanduiche1 = Math.random()*500+1;
+					posYSanduiche1 = -20;	
 				}
-				if ((distancia(posXPersonagem,posYPersonagem,posXLixo2,posYLixo2) < 100)){
+				if ((distancia(posXPersonagem,posYPersonagem,posSanduiche2,posYSanduiche2) < 100)){
 					// Atualiza pontos
 					pontos+=20;
 
-					// Posição do novo lixo 2
-					posXLixo2 = Math.random()*400+1;
-					posYLixo2 = -20;
+					// Posição do novo sanduiche 2
+					posSanduiche2 = Math.random()*400+1;
+					posYSanduiche2 = -20;
 				}
 				
 				// Atualiza pontos
@@ -193,8 +193,8 @@
 			function distancia(x1c,y1c,x2c,y2c) {
 				x1c = x1c + personagem.width/2;
 				y1c = y1c + personagem.height/2;
-				x2c = x2c + lixo1.width/2;
-				y2c = y2c + lixo1.height/2;
+				x2c = x2c + sanduiche1.width/2;
+				y2c = y2c + sanduiche1.height/2;
 				
 				// Eleva ao quadrado
 				x = Math.pow(x1c - x2c,2);
